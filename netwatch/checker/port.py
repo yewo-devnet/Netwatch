@@ -67,7 +67,7 @@ def check_port(
             rtt_ms=round(elapsed, 3),
         )
     except socket.timeout:
-        log.debug("Port %d on '%s' TIMED OUT", port, host)
+        log.debug("Port %d on '%s' TIMED OUT after %ds", port, host, timeout)
         return PortResult(host=host, port=port, status="timeout", rtt_ms=None)
     except (ConnectionRefusedError, OSError) as exc:
         log.debug("Port %d on '%s' is CLOSED: %s", port, host, exc)
