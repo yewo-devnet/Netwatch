@@ -463,7 +463,14 @@ def build_parser() -> argparse.ArgumentParser:
 # ---------------------------------------------------------------------------
 
 def main(argv: Optional[List[str]] = None) -> int:
-    """Parse arguments and dispatch to the appropriate sub-command."""
+    """Parse arguments and dispatch to the appropriate sub-command.
+
+    Args:
+        argv: Argument list (defaults to sys.argv[1:] when None).
+
+    Returns:
+        Exit code: 0 on success, 1 on logical failure, 2 on usage error.
+    """
     # Default logger (INFO, console only) – may be reconfigured by sub-commands
     configure_root_logger("INFO")
 
