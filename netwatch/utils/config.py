@@ -213,7 +213,7 @@ def load_config(path: str) -> dict:
     if not isinstance(raw, dict):
         raise ConfigError(
             f"Configuration file '{path}' must contain a YAML mapping at "
-            f"the top level."
+            f"the top level, got {type(raw).__name__}."
         )
 
     # Expand ${ENV_VAR} placeholders – skip the password key in logs
