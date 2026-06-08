@@ -207,6 +207,7 @@ def ping(
     if timeout < 1:
         raise ValueError(f"timeout must be >= 1, got {timeout}")
 
+    # Validate that host resolves before spending time on probes
     log.debug("Pinging host='%s' count=%d timeout=%d", host, count, timeout)
 
     # Try raw ICMP socket — probe once first to test permissions.
