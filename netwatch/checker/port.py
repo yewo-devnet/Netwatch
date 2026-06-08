@@ -82,9 +82,11 @@ def check_ports(
     """
     Check multiple TCP ports on *host*.
 
+    Ports are checked sequentially in the order provided.
+
     Args:
         host:    Hostname or IP address.
-        ports:   List of TCP port numbers.
+        ports:   List of TCP port numbers (1–65535).
         timeout: Per-connection timeout in seconds.
 
     Returns:
