@@ -82,6 +82,7 @@ def check_http(
         ssl_context = ssl.create_default_context()
         ssl_context.check_hostname = False
         ssl_context.verify_mode = ssl.CERT_NONE
+        log.debug("SSL certificate verification disabled for '%s'", url)
 
     start = time.perf_counter()
     try:
