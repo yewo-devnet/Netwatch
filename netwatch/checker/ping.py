@@ -228,9 +228,8 @@ def ping(
     rtts: list = []
     last_error: Optional[str] = None
 
-    # seq 0 was already sent above; collect remaining packets starting at seq 1.
-    # But for simplicity re-run all packets (the initial probe is a warm-up).
-    # Re-doing all 'count' packets gives consistent statistics.
+    # seq 0 was already consumed by the permission probe above;
+    # run all 'count' packets starting from seq 0 for consistent statistics.
     for seq in range(count):
         sent += 1
         try:
