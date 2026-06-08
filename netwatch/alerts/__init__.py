@@ -1,0 +1,1 @@
+"""NetWatch alerts package."""
