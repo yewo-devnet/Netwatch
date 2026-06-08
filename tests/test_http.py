@@ -107,6 +107,11 @@ class TestCheckHttp:
         call_kwargs = mock_open.call_args.kwargs
         assert "context" not in call_kwargs
 
+    def test_empty_codes_raises(self):
+        """Passing an empty healthy_codes list should raise ValueError."""
+        with pytest.raises(ValueError, match="healthy_codes"):
+            check_http("http://example.com", healthy_codes=[])
+
     def test_returns_http_result_dataclass(self):
         mock_resp = _make_response(200)
         with patch("urllib.request.urlopen", return_value=mock_resp):
