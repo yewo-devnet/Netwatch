@@ -24,11 +24,12 @@ _ENV_PLACEHOLDER = re.compile(r"\$\{([^}]+)\}")
 
 # Regex for valid hostname / IPv4 / IPv6 (liberal but safe)
 HOSTNAME_RE = re.compile(
-    r"^(?:[a-zA-Z0-9]"
-    r"(?:[a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?"
-    r"(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)*"
-    r"|(?:\d{1,3}\.){3}\d{1,3}"
-    r"|(?:[0-9a-fA-F:]+))$"
+    r"^(?:"
+    r"(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?"
+    r"(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)*)"  # hostname
+    r"|(?:(?:\d{1,3}\.){3}\d{1,3})"                              # IPv4
+    r"|(?:[0-9a-fA-F:]{2,39})"                                   # IPv6
+    r")$"
 )
 
 
