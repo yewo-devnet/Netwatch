@@ -8,6 +8,12 @@ Features:
 - Subject format:
     [NetWatch] ALERT – <label> is DOWN
     [NetWatch] RECOVERED – <label> is UP
+
+Security note:
+    The SMTP password is read from the environment variable
+    NETWATCH_SMTP_PASSWORD at send time. It is never stored on the object,
+    never passed as a function argument visible in tracebacks, and never
+    written to any log handler.
 """
 
 import datetime
