@@ -153,7 +153,7 @@ def send_alert(
             log.info("Email alert sent successfully on attempt %d.", attempt)
             return True
         except (smtplib.SMTPException, OSError) as exc:
-            wait = _BACKOFF_BASE * (2 ** (attempt - 1))
+            wait = _BACKOFF_BASE * (2 ** (attempt - 1))  # 1s, 2s, 4s
             if attempt < _MAX_RETRIES:
                 log.warning(
                     "Email send attempt %d/%d failed: %s. Retrying in %ds…",
