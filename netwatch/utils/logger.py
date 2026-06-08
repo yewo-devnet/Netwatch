@@ -112,5 +112,11 @@ def get_logger(name: str) -> logging.Logger:
 
     Returns:
         logging.Logger instance.
+
+    Example::
+
+        from netwatch.utils.logger import get_logger
+        log = get_logger(__name__)
+        log.info("Module loaded.")
     """
     return logging.getLogger(name)
