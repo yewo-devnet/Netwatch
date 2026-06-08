@@ -28,7 +28,10 @@ from netwatch.utils.logger import configure_root_logger, get_logger
 
 
 def _parse_ports(value: str) -> List[int]:
-    """Parse a comma-separated list of ports into a list of ints."""
+    """Parse a comma-separated list of ports into a list of ints.
+
+    Example: '22,80,443' -> [22, 80, 443]
+    """
     try:
         ports = [int(p.strip()) for p in value.split(",") if p.strip()]
     except ValueError:
@@ -44,7 +47,10 @@ def _parse_ports(value: str) -> List[int]:
 
 
 def _parse_codes(value: str) -> List[int]:
-    """Parse comma-separated HTTP status codes."""
+    """Parse comma-separated HTTP status codes into a list of ints.
+
+    Example: '200,201,204' -> [200, 201, 204]
+    """
     try:
         codes = [int(c.strip()) for c in value.split(",") if c.strip()]
     except ValueError:
