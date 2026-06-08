@@ -65,6 +65,9 @@ def check_http(
 
     codes = healthy_codes if healthy_codes is not None else _DEFAULT_HEALTHY_CODES
 
+    if not codes:
+        raise ValueError("healthy_codes must not be empty")
+
     log.debug(
         "HTTP probe url='%s' timeout=%d verify_ssl=%s healthy_codes=%s",
         url,
