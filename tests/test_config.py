@@ -154,6 +154,14 @@ class TestValidateConfig:
         with pytest.raises(ConfigError, match="invalid port"):
             validate_config(cfg)
 
+    def test_port_out_of_range(self):
+        """Port 65536 is above the valid range."""
+        cfg = _valid_config()
+        cfg["devices"][0]["checks"] = ["port"]
+        cfg["devices"][0]["ports"] = [65536]
+        with pytest.raises(ConfigError, match="invalid port"):
+            validate_config(cfg)
+
     def test_smtp_invalid_port(self):
         cfg = _valid_config()
         cfg["smtp"] = {
