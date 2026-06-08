@@ -1,0 +1,28 @@
+smtp:
+  host: smtp.example.com
+  port: 587
+  username: alerts@example.com
+  password: ${NETWATCH_SMTP_PASSWORD}
+  recipients:
+    - admin@example.com
+
+monitoring:
+  interval: 60
+  alert_cooldown: 300
+  log_file: netwatch.log
+  log_level: INFO
+
+devices:
+  - label: Core Router
+    host: 192.168.1.1
+    checks: [ping]
+
+  - label: Web Server
+    host: 10.0.0.50
+    checks: [ping, port, http]
+    ports: [22, 80, 443]
+    url: https://10.0.0.50/health
+
+  - label: External DNS
+    host: 8.8.8.8
+    checks: [ping]
