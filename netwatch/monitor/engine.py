@@ -116,7 +116,7 @@ class MonitorEngine:
             self._device_statuses[label] = DeviceStatus(
                 label=label,
                 host=device["host"],
-                checks=device.get("checks", []),
+                checks=list(device.get("checks", [])),
             )
 
     # ------------------------------------------------------------------
