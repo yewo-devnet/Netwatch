@@ -126,11 +126,16 @@ class MonitorEngine:
     def start(self) -> None:
         """Start all polling threads and the event-processing loop."""
         log.info(
-            "NetWatch engine starting – %d device(s), interval=%ds, cooldown=%ds",
+            "NetWatch engine starting \u2013 %d device(s), interval=%ds, cooldown=%ds",
             len(self._device_statuses),
             self._interval,
             self._cooldown,
         )
+
+        if self._no_alert:
+            log.info("Email alerts are DISABLED (--no-alert flag set).")
+        elif not self._smtp_cfg:
+            log.warning("No 'smtp' section in config; email alerts will not be sent.")
 
         # Register signal handlers for clean shutdown
         signal.signal(signal.SIGINT, self._handle_signal)
