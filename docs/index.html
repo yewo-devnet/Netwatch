@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NetWatch - Real-Time Network Monitoring</title>
+  <meta name="description" content="A lightweight, real-time network monitoring CLI tool written in Python.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css">
+  
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --border: #30363d;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --green: #3fb950;
+      --red: #f85149;
+      --text: #e6edf3;
+      --muted: #8b949e;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    a:hover {
+      color: var(--accent-hover);
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    section {
+      padding: 80px 0;
+    }
+
+    h1, h2, h3, h4 {
+      color: var(--text);
+      margin-top: 0;
+    }
+
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 1rem;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      color: #fff;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent);
+    }
+
+    /* Navigation */
+    nav {
+      position: sticky;
+      top: 0;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+      padding: 16px 0;
+    }
+
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.25rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .nav-links a {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      color: var(--accent);
+    }
+
+    .hamburger {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 120px 0 80px;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+      color: var(--muted);
+      margin-bottom: 32px;
+      max-width: 600px;
+      margin-inline: auto;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-bottom: 48px;
+    }
+
+    .built-by {
+      display: inline-block;
+      padding: 8px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      color: var(--muted);
+    }
+
+    .built-by a {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* Code Blocks */
+    .code-wrapper {
+      position: relative;
+      margin-bottom: 24px;
+    }
+
+    pre {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      line-height: 1.6;
+      overflow-x: auto;
+      margin: 0;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.2s;
+    }
+
+    .copy-btn:hover {
+      border-color: var(--accent);
+      color: var(--text);
+    }
+
+    .copy-btn.copied {
+      background: var(--green);
+      color: #0d1117;
+      border-color: var(--green);
+    }
+
+    /* Features Grid */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      transition: all 0.2s;
+    }
+
+    .feature-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent);
+    }
+
+    .feature-icon {
+      font-size: 2rem;
+      margin-bottom: 16px;
+      display: inline-block;
+    }
+
+    .feature-card h3 {
+      font-size: 1.125rem;
+      margin-bottom: 8px;
+    }
+
+    .feature-card p {
+      color: var(--muted);
+      margin: 0;
+      font-size: 0.9375rem;
+    }
+
+    /* Requirements List */
+    .requirements-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .requirements-list li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+      color: var(--text);
+      font-size: 1.1rem;
+    }
+
+    .requirements-list li .icon {
+      color: var(--green);
+    }
+
+    /* Config Table */
+    .table-container {
+      overflow-x: auto;
+      margin-top: 24px;
+    }
+
+    .config-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 600px;
+    }
+
+    .config-table th, .config-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+    }
+
+    .config-table th {
+      background: var(--surface);
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .config-table td {
+      color: var(--muted);
+    }
+
+    .config-table code {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--surface);
+      padding: 4px 6px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-size: 0.875em;
+      color: var(--text);
+    }
+
+    /* Usage Items */
+    .usage-item {
+      margin-bottom: 40px;
+    }
+
+    .usage-item h3 {
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+    
+    .usage-item p {
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 0;
+      margin-top: 80px;
+      background: var(--surface);
+    }
+
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+
+    .footer-left {
+      color: var(--muted);
+    }
+
+    .footer-center {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer-center a {
+      color: var(--muted);
+    }
+
+    .footer-center a:hover {
+      color: var(--text);
+    }
+
+    .footer-right {
+      color: var(--muted);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--surface);
+        flex-direction: column;
+        padding: 20px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .nav-links.active {
+        display: flex;
+      }
+
+      .hamburger {
+        display: block;
+      }
+
+      .hero h1 {
+        font-size: 2.25rem;
+      }
+      
+      .hero-actions {
+        flex-direction: column;
+      }
+
+      .footer-content {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav>
+    <div class="container nav-container">
+      <a href="#" class="logo">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22v-5"/><path d="M9 8V2"/><path d="M15 8V2"/><path d="M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8Z"/></svg> NetWatch
+      </a>
+      <div class="nav-links" id="nav-links">
+        <a href="#features">Features</a>
+        <a href="#installation">Installation</a>
+        <a href="#configuration">Configuration</a>
+        <a href="#usage">Usage</a>
+        <!-- TODO -->
+        <a href="https://github.com/yewo-mkandawire" target="_blank" rel="noopener noreferrer">Author</a>
+      </div>
+      <button class="hamburger" id="hamburger-menu" aria-label="Toggle Navigation">
+        ☰
+      </button>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <main>
+    <section class="hero container">
+      <h1>NetWatch — Real-Time Network Monitoring</h1>
+      <p>A lightweight, real-time network monitoring CLI tool written in Python.</p>
+      
+      <div class="hero-actions">
+        <!-- TODO -->
+        <a href="https://github.com/yewo-mkandawire/netwatch" class="btn btn-primary" target="_blank" rel="noopener noreferrer">View on GitHub</a>
+        <a href="#installation" class="btn btn-secondary">Quick Install</a>
+      </div>
+      
+      <div class="built-by">
+        <!-- TODO -->
+        Built by <a href="https://github.com/yewo-mkandawire" target="_blank" rel="noopener noreferrer">Yewo Mkandawire</a>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="container">
+      <h2>Features</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
+          <h3>ICMP ping</h3>
+          <p>Raw socket with transparent fallback to the OS ping binary.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></svg></span>
+          <h3>TCP port check</h3>
+          <p>Open / closed / timeout per port.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg></span>
+          <h3>HTTP/HTTPS probe</h3>
+          <p>stdlib urllib only; configurable healthy status codes; SSL bypass option.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></span>
+          <h3>Continuous monitor</h3>
+          <p>One thread per device, live status table, SIGINT/SIGTERM clean shutdown.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></span>
+          <h3>Email alerts</h3>
+          <p>STARTTLS (587) or implicit TLS (465), exponential back-off retry, 300 s cooldown.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span>
+          <h3>YAML config</h3>
+          <p>${ENV_VAR} placeholder expansion, full validation with descriptive errors.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg></span>
+          <h3>Zero heavy runtime deps</h3>
+          <p>Only PyYAML, tabulate, jsonschema.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Requirements Section -->
+    <section id="requirements" class="container">
+      <h2>Requirements</h2>
+      <ul class="requirements-list">
+        <li><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg></span> Python 3.9+ required.</li>
+        <li><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg></span> OS support: Windows, macOS, Linux (any OS with Python socket support).</li>
+      </ul>
+    </section>
+
+    <!-- Installation Section -->
+    <section id="installation" class="container">
+      <h2>Installation</h2>
+      <ol class="requirements-list" style="counter-reset: inst-counter;">
+        <li style="counter-increment: inst-counter;">
+          <div>1. Clone the repository</div>
+        </li>
+        <div class="code-wrapper">
+          <button class="copy-btn" aria-label="Copy code">Copy</button>
+          <!-- TODO -->
+          <pre><code class="language-bash">git clone https://github.com/yewo-mkandawire/netwatch.git
+cd netwatch</code></pre>
+        </div>
+        
+        <li style="counter-increment: inst-counter;">
+          <div>2. Install dependencies</div>
+        </li>
+        <div class="code-wrapper">
+          <button class="copy-btn" aria-label="Copy code">Copy</button>
+          <pre><code class="language-bash">pip install -r requirements.txt</code></pre>
+        </div>
+
+        <li style="counter-increment: inst-counter;">
+          <div>3. Install the package (Optional, to put `netwatch` on your PATH)</div>
+        </li>
+        <div class="code-wrapper">
+          <button class="copy-btn" aria-label="Copy code">Copy</button>
+          <pre><code class="language-bash">pip install -e .</code></pre>
+        </div>
+      </ol>
+    </section>
+
+    <!-- Configuration Section -->
+    <section id="configuration" class="container">
+      <h2>Configuration</h2>
+      <p>Copy <code>netwatch.yaml</code> and edit it for your environment. Set the SMTP password in the environment — never in the file:</p>
+      
+      <div class="code-wrapper">
+        <button class="copy-btn" aria-label="Copy code">Copy</button>
+        <pre><code class="language-bash">export NETWATCH_SMTP_PASSWORD=your_password</code></pre>
+      </div>
+
+      <p>Here is a sample <code>netwatch.yaml</code> configuration file:</p>
+      
+      <div class="code-wrapper">
+        <button class="copy-btn" aria-label="Copy code">Copy</button>
+        <pre><code class="language-yaml">smtp:
+  host: smtp.example.com
+  port: 587                        # 587=STARTTLS, 465=implicit TLS
+  username: alerts@example.com
+  password: ${NETWATCH_SMTP_PASSWORD}
+  recipients:
+    - admin@example.com
+
+monitoring:
+  interval: 60          # seconds between polls
+  alert_cooldown: 300   # seconds before re-alerting on same DOWN device
+  log_file: netwatch.log
+  log_level: INFO
+
+devices:
+  - label: Core Router
+    host: 192.168.1.1
+    checks: [ping]
+
+  - label: Web Server
+    host: 10.0.0.50
+    checks: [ping, port, http]
+    ports: [22, 80, 443]
+    url: https://10.0.0.50/health</code></pre>
+      </div>
+
+      <div class="table-container">
+        <table class="config-table">
+          <thead>
+            <tr>
+              <th>Key</th>
+              <th>Type</th>
+              <th>Default</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>smtp.host</code></td>
+              <td>String</td>
+              <td>-</td>
+              <td>SMTP server hostname for email alerts</td>
+            </tr>
+            <tr>
+              <td><code>smtp.port</code></td>
+              <td>Integer</td>
+              <td>-</td>
+              <td>SMTP server port (e.g., 587 for STARTTLS)</td>
+            </tr>
+            <tr>
+              <td><code>smtp.username</code></td>
+              <td>String</td>
+              <td>-</td>
+              <td>Username to authenticate with SMTP server</td>
+            </tr>
+            <tr>
+              <td><code>smtp.password</code></td>
+              <td>String</td>
+              <td>-</td>
+              <td>Password for SMTP. Should reference an environment variable like <code>${ENV_VAR}</code></td>
+            </tr>
+            <tr>
+              <td><code>smtp.recipients</code></td>
+              <td>List of Strings</td>
+              <td>-</td>
+              <td>Email addresses to receive alert notifications</td>
+            </tr>
+            <tr>
+              <td><code>monitoring.interval</code></td>
+              <td>Integer</td>
+              <td><code>60</code></td>
+              <td>Seconds between continuous monitoring polls</td>
+            </tr>
+            <tr>
+              <td><code>monitoring.alert_cooldown</code></td>
+              <td>Integer</td>
+              <td><code>300</code></td>
+              <td>Seconds before re-alerting on the same DOWN device</td>
+            </tr>
+            <tr>
+              <td><code>monitoring.log_file</code></td>
+              <td>String</td>
+              <td><code>netwatch.log</code></td>
+              <td>Path where the application logs will be saved</td>
+            </tr>
+            <tr>
+              <td><code>monitoring.log_level</code></td>
+              <td>String</td>
+              <td><code>INFO</code></td>
+              <td>Logging verbosity level (e.g., INFO, DEBUG)</td>
+            </tr>
+            <tr>
+              <td><code>devices</code></td>
+              <td>List of Objects</td>
+              <td>-</td>
+              <td>The list of devices and services you want to monitor</td>
+            </tr>
+            <tr>
+              <td><code>devices[].label</code></td>
+              <td>String</td>
+              <td>-</td>
+              <td>Friendly name to identify the device in logs and alerts</td>
+            </tr>
+            <tr>
+              <td><code>devices[].host</code></td>
+              <td>String</td>
+              <td>-</td>
+              <td>IP address or hostname of the device</td>
+            </tr>
+            <tr>
+              <td><code>devices[].checks</code></td>
+              <td>List of Strings</td>
+              <td>-</td>
+              <td>Which checks to run: <code>ping</code>, <code>port</code>, <code>http</code></td>
+            </tr>
+            <tr>
+              <td><code>devices[].ports</code></td>
+              <td>List of Integers</td>
+              <td>-</td>
+              <td>(Optional) List of TCP ports to probe if <code>port</code> check is active</td>
+            </tr>
+            <tr>
+              <td><code>devices[].url</code></td>
+              <td>String</td>
+              <td>-</td>
+              <td>(Optional) Target URL to request if <code>http</code> check is active</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Usage Section -->
+    <section id="usage" class="container">
+      <h2>Usage</h2>
+      <p>NetWatch provides several sub-commands for on-demand checking or continuous monitoring.</p>
+
+      <div class="usage-item">
+        <h3>Ping</h3>
+        <p>Ping a host to verify network reachability via ICMP.</p>
+        <div class="code-wrapper">
+          <button class="copy-btn" aria-label="Copy code">Copy</button>
+          <pre><code class="language-bash">python -m netwatch ping 8.8.8.8</code></pre>
+        </div>
+      </div>
+
+      <div class="usage-item">
+        <h3>Port</h3>
+        <p>Check the status of specific TCP ports on a host.</p>
+        <div class="code-wrapper">
+          <button class="copy-btn" aria-label="Copy code">Copy</button>
+          <pre><code class="language-bash">python -m netwatch port 8.8.8.8 -p 53,80,443</code></pre>
+        </div>
+      </div>
+
+      <div class="usage-item">
+        <h3>HTTP</h3>
+        <p>Probe an HTTP or HTTPS endpoint for health.</p>
+        <div class="code-wrapper">
+          <button class="copy-btn" aria-label="Copy code">Copy</button>
+          <pre><code class="language-bash">python -m netwatch http https://example.com</code></pre>
+        </div>
+      </div>
+      
+      <div class="usage-item">
+        <h3>Monitor</h3>
+        <p>Start continuous monitoring of all configured devices in the background.</p>
+        <div class="code-wrapper">
+          <button class="copy-btn" aria-label="Copy code">Copy</button>
+          <pre><code class="language-bash">NETWATCH_SMTP_PASSWORD=secret python -m netwatch monitor -c netwatch.yaml</code></pre>
+        </div>
+      </div>
+
+      <div class="usage-item">
+        <h3>Config Validate</h3>
+        <p>Verify that your YAML configuration file is structurally correct.</p>
+        <div class="code-wrapper">
+          <button class="copy-btn" aria-label="Copy code">Copy</button>
+          <pre><code class="language-bash">NETWATCH_SMTP_PASSWORD=secret python -m netwatch config validate netwatch.yaml</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Running Tests Section -->
+    <section id="tests" class="container">
+      <h2>Running Tests</h2>
+      <p>If you're developing or contributing, you can run the test suite to ensure code health.</p>
+      <div class="code-wrapper">
+        <button class="copy-btn" aria-label="Copy code">Copy</button>
+        <pre><code class="language-bash">pytest --tb=short -q</code></pre>
+      </div>
+      <p>The test suite fully covers ICMP ping fallbacks, TCP port checking, HTTP probes, the threading engine, email alerting, configuration validation, and logging.</p>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer-content">
+      <div class="footer-left">
+        NetWatch &copy; 2026 &mdash; MIT License
+      </div>
+      <div class="footer-center">
+        <!-- TODO -->
+        <a href="https://github.com/yewo-mkandawire/netwatch" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
+        <!-- TODO -->
+        <a href="https://github.com/yewo-mkandawire/netwatch/issues" target="_blank" rel="noopener noreferrer">Report an Issue</a>
+        <!-- TODO -->
+        <a href="https://github.com/yewo-mkandawire" target="_blank" rel="noopener noreferrer">Author Profile</a>
+      </div>
+      <div class="footer-right">
+        <!-- TODO -->
+        Built by <a href="https://github.com/yewo-mkandawire" target="_blank" rel="noopener noreferrer">Yewo Mkandawire</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+  <script>
+    // Initialize syntax highlighting
+    document.addEventListener('DOMContentLoaded', (event) => {
+      document.querySelectorAll('pre code').forEach((block) => {
+        hljs.highlightElement(block);
+      });
+    });
+
+    // Mobile Navigation Toggle
+    const hamburgerMenu = document.getElementById('hamburger-menu');
+    const navLinks = document.getElementById('nav-links');
+
+    hamburgerMenu.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+    });
+
+    // Close mobile nav on link click
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 768) {
+          navLinks.classList.remove('active');
+        }
+      });
+    });
+
+    // Copy to Clipboard Functionality
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const pre = btn.nextElementSibling;
+        const code = pre.textContent;
+
+        navigator.clipboard.writeText(code).then(() => {
+          const originalText = btn.textContent;
+          btn.textContent = 'Copied ✓';
+          btn.classList.add('copied');
+          
+          setTimeout(() => {
+            btn.textContent = originalText;
+            btn.classList.remove('copied');
+          }, 2000);
+        }).catch(err => {
+          console.error('Failed to copy text: ', err);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
